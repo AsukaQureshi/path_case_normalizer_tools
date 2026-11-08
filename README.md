@@ -19,3 +19,10 @@ The awkward edge: Unicode. `str.lower()` does not consider the German `Straße` 
 Separator handling is explicit, not platform-detected. Pass `sep="/"` for POSIX paths and `sep="\\"` for Windows paths. Multi-character separators (e.g. `"::"`) are supported. Leading, trailing, and consecutive separators are preserved so that `normalize_path("A/B/") == "a/b/"`, which `str.split`-based implementations get wrong.
 
 `None` is rejected with `TypeError`; it is not silently coerced to the string `"None"`.
+
+## Design notes
+
+The window stores values eagerly rather than keeping running aggregates. Running
+sums drift with floating point over long streams, and recomputing from a small
+buffer is cheap enough that the drift is not worth the speed.
+
